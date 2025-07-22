@@ -71,9 +71,9 @@ class Engine:
         board = self.board
         if board.is_checkmate():
             if board.turn:
-                return 9999
-            else:
                 return -9999
+            else:
+                return 9999
         if board.is_stalemate() or board.is_insufficient_material():
             return 0
 
