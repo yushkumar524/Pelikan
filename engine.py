@@ -147,16 +147,18 @@ class Engine:
         return alpha
 
     def order_moves(self, moves):
-        captures = []
-        others = []
-        
-        for move in moves:
+        def move_priority(move):
+            score = 0
             if self.board.is_capture(move):
-                captures.append(move)
-            else:
-                others.append(move)
-    
-        return captures + others
+                captured = self.board.piece_at(move.to_square)
+                capturing = self.board.piece_at(move.from_square)
+                if captured:
+                    score += 1000 + captured.piece_type * 10 - capturing.piece_type * 10
+            if self.board.gives_check(move):
+                score += 50
+            return score
+        
+        return sorted(moves, key=move_priority, reverse=True)
 
     def alphabeta(self, alpha, beta, depth):
         key = chess.polyglot.zobrist_hash(self.board)
