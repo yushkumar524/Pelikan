@@ -208,6 +208,8 @@ class Engine:
                     best_move = move
                 if value > alpha:
                     alpha = value
+            if best_move is None and self.board.legal_moves:
+                best_move = self.board.legal_moves[0]
             if best_move:
                 self.move_history.append(best_move)
             return best_move
