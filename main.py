@@ -27,11 +27,13 @@ class ChessGame:
                 while (not self.chessboard.apply_move(move_str)):
                     print("Invalid input. Please enter a move in algebraic notation.")
                     move_str = self.ui.get_player_move()
+                self.ui.signal_board_update()
             else:
                 print("Pelikan is thinking...")
                 move = self.engine.select_move(depth=3)
                 print(f"Pelikan plays: {self.chessboard.board.san(move)}")
                 self.chessboard.board.push(move)
+                self.ui.signal_board_update()
 
         self.ui.display()
         print("Game Over. Result:", self.chessboard.result())
