@@ -76,6 +76,8 @@ class Engine:
                 return 9999
         if board.is_stalemate() or board.is_insufficient_material():
             return 0
+        if board.is_repetition(count=2):
+            return 0
 
         wp = len(board.pieces(chess.PAWN, chess.WHITE))
         bp = len(board.pieces(chess.PAWN, chess.BLACK))

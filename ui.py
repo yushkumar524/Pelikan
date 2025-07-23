@@ -37,7 +37,7 @@ class UI:
                         }})
                         .catch(error => {{}})
                 }}
-                setInterval(checkForUpdayes, 200);
+                setInterval(checkForUpdates, 200);
             </script>
         </head>
         <body>
