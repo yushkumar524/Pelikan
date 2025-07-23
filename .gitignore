@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .env
+
+chess_board.html
+board_signal.txt
