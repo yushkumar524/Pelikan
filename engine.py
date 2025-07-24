@@ -197,11 +197,12 @@ class Engine:
                 self.move_history.append(move)
                 return move
         except:
+            legal = self.board.legal_moves
             best_move = None
             best_value = -9999
             alpha = -10000
             beta = 10000
-            for move in self.board.legal_moves:
+            for move in legal:
                 self.board.push(move)
                 value = -self.alphabeta(-beta, -alpha, depth - 1)
                 self.board.pop()
@@ -210,8 +211,8 @@ class Engine:
                     best_move = move
                 if value > alpha:
                     alpha = value
-            if best_move is None and self.board.legal_moves:
-                best_move = self.board.legal_moves[0]
+            if best_move is None and legal:
+                best_move = legal[0]
             if best_move:
                 self.move_history.append(best_move)
             return best_move
