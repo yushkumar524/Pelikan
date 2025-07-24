@@ -32,6 +32,6 @@ A Python-based chess engine with a command-line interface, SVG board visualizati
   python main.py
   ```
 
-### Choose your side
+### Choose your side and play!
 
-You'll be prompted to play either white ('w') or black ('b'). The engine responds with its own move after each turn. At any point, refresh the window with the SVG in your browser to view the current board state.
+You'll be prompted to play either white ('w') or black ('b'). The engine responds with its own move after each turn. The current game state will be displayed in the window with the SVG in your browser.
