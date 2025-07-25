@@ -18,6 +18,27 @@ class ChessGame:
             elif (choice == "b"): return False
             else: print("Invalid input. Please enter 'w' or 'b'.")
 
+    def get_game_ending_reason(self):
+        board = self.chessboard.board
+        
+        if board.is_checkmate():
+            return "by checkmate."
+        elif board.is_stalemate():
+            return "by stalemate."
+        elif board.is_insufficient_material():
+            return "by insufficient material."
+        elif board.is_seventyfive_moves():
+            return "by 75-move rule."
+        elif board.is_fivefold_repetition():
+            return "by fivefold repetition."
+        elif board.can_claim_draw():
+            if board.can_claim_fifty_moves():
+                return "by 50-move rule."
+            elif board.can_claim_threefold_repetition():
+                return "by threefold repetition."
+        else:
+            return "."
+
     def play(self):
         while not self.chessboard.is_game_over():
             self.ui.display()
@@ -36,7 +57,7 @@ class ChessGame:
                 self.ui.signal_board_update()
 
         self.ui.display()
-        print("Game Over. Result:", self.chessboard.result())
+        print("Game over. Result:", self.chessboard.result(), self.get_game_ending_reason())
 
 
 if __name__ == "__main__":

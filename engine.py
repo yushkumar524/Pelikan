@@ -70,7 +70,7 @@ class Engine:
     def evaluate(self):
         board = self.board
         if board.is_checkmate():
-            if board.turn:
+            if board.turn == chess.WHITE:
                 return -9999
             else:
                 return 9999
