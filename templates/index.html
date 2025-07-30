@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelikan Chess Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .board-container {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .board {
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            flex: 0 0 300px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .title {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .game-setup {
+            margin-bottom: 25px;
+        }
+
+        .color-selection {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .color-btn.white {
+            background: white;
+            color: #333;
+        }
+
+        .color-btn.black {
+            background: #333;
+            color: white;
+        }
+
+        .color-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .color-btn.selected {
+            outline: 3px solid #ffd700;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .start-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-info {
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .move-input {
+            margin-bottom: 25px;
+        }
+
+        .move-input input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .move-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .move-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .move-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .status.info {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.4);
+        }
+
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+        }
+
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .thinking {
+            text-align: center;
+            font-style: italic;
+            color: #ffd700;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .sidebar {
+                flex: none;
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-area">
+            <h1 class="title">Pelikan Chess Engine 𓅟</h1>
+            <div class="board-container">
+                <div id="chess-board" class="board">
+                    <div style="width: 400px; height: 400px; display: flex; align-items: center; justify-content: center; background: #f0d9b5; border-radius: 5px;">
+                        <p style="color: #8b4513; font-size: 18px;">Start a new game to begin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div id="game-setup" class="game-setup">
+                <h3 style="margin-bottom: 15px;">Start New Game</h3>
+                <div class="color-selection">
+                    <button class="color-btn white selected" data-color="white">
+                        ♔ Play as White
+                    </button>
+                    <button class="color-btn black" data-color="black">
+                        ♚ Play as Black
+                    </button>
+                </div>
+                <button id="start-game" class="start-btn">Start Game</button>
+            </div>
+
+            <div id="game-controls" class="hidden">
+                <div id="status" class="status info">Your turn</div>
+
+                <div class="game-info">
+                    <div class="info-item">
+                        <span>Turn:</span>
+                        <span id="current-turn">White</span>
+                    </div>
+                    <div class="info-item">
+                        <span>You are:</span>
+                        <span id="player-color">White</span>
+                    </div>
+                </div>
+
+                <div id="move-input" class="move-input">
+                    <input type="text" id="move" placeholder="Enter move (e.g., e4, Nf3)" maxlength="10">
+                    <button id="make-move" class="move-btn">Make Move</button>
+                </div>
+
+                <div id="thinking" class="thinking hidden">
+                    Pelikan is thinking...
+                </div>
+
+                <button id="new-game" class="start-btn" style="background: linear-gradient(45deg, #ff9800, #f57c00);">
+                    New Game
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedColor = 'white';
+        let gameActive = false;
+        let playerTurn = true;
+
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedColor = btn.dataset.color;
+            });
+        });
+
+        document.getElementById('start-game').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/new_game', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ color: selectedColor })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    gameActive = true;
+                    document.getElementById('game-setup').classList.add('hidden');
+                    document.getElementById('game-controls').classList.remove('hidden');
+                    document.getElementById('player-color').textContent = selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1);
+                    
+                    updateGameState();
+                }
+            } catch (error) {
+                showStatus('Error starting game', 'error');
+            }
+        });
+
+        document.getElementById('make-move').addEventListener('click', makeMove);
+        document.getElementById('move').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') makeMove();
+        });
+
+        async function makeMove() {
+            const moveInput = document.getElementById('move');
+            const move = moveInput.value.trim();
+            
+            if (!move) return;
+
+            try {
+                showStatus('Making move...', 'info');
+                document.getElementById('thinking').classList.remove('hidden');
+                
+                const response = await fetch('/make_move', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ move })
+                });
+
+                const data = await response.json();
+                document.getElementById('thinking').classList.add('hidden');
+
+                if (data.success) {
+                    moveInput.value = '';
+                    updateBoard(data.board_svg);
+                    document.getElementById('current-turn').textContent = data.turn;
+                    
+                    if (data.game_over) {
+                        showStatus(`Game Over: ${data.result}`, 'success');
+                        document.getElementById('move-input').classList.add('hidden');
+                    } else if (data.engine_move) {
+                        showStatus(`Pelikan played: ${data.engine_move}`, 'info');
+                        setTimeout(() => {
+                            if (!data.game_over) {
+                                showStatus('Your turn', 'info');
+                            }
+                        }, 2000);
+                    }
+                } else {
+                    showStatus(data.error, 'error');
+                }
+            } catch (error) {
+                document.getElementById('thinking').classList.add('hidden');
+                showStatus('Error making move', 'error');
+            }
+        }
+
+        document.getElementById('new-game').addEventListener('click', () => {
+            gameActive = false;
+            document.getElementById('game-controls').classList.add('hidden');
+            document.getElementById('game-setup').classList.remove('hidden');
+            document.getElementById('chess-board').innerHTML = `
+                <div style="width: 400px; height: 400px; display: flex; align-items: center; justify-content: center; background: #f0d9b5; border-radius: 5px;">
+                    <p style="color: #8b4513; font-size: 18px;">Start a new game to begin</p>
+                </div>
+            `;
+        });
+
+        async function updateGameState() {
+            try {
+                const response = await fetch('/game_state');
+                const data = await response.json();
+                
+                if (data.error) {
+                    showStatus(data.error, 'error');
+                    return;
+                }
+
+                updateBoard(data.board_svg);
+                document.getElementById('current-turn').textContent = data.turn;
+                
+                if (data.game_over) {
+                    showStatus(`Game Over: ${data.result}`, 'success');
+                    document.getElementById('move-input').classList.add('hidden');
+                } else if (data.is_player_turn) {
+                    showStatus('Your turn', 'info');
+                    document.getElementById('move-input').classList.remove('hidden');
+                } else {
+                    showStatus('Pelikan\'s turn', 'info');
+                    document.getElementById('move-input').classList.add('hidden');
+                }
+            } catch (error) {
+                showStatus('Error updating game state', 'error');
+            }
+        }
+
+        function updateBoard(svgContent) {
+            document.getElementById('chess-board').innerHTML = svgContent;
+        }
+
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+    </script>
+</body>
+</html>
