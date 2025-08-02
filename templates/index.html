@@ -265,10 +265,6 @@
                 <div id="status" class="status info">Your turn</div>
 
                 <div class="game-info">
-                    <!-- <div class="info-item">
-                        <span>Turn:</span>
-                        <span id="current-turn">White</span>
-                    </div> -->
                     <div class="info-item">
                         <span>You are:</span>
                         <span id="player-color">White</span>
@@ -340,8 +336,8 @@
             if (!move) return;
 
             try {
-                showStatus('Making move...', 'info');
-                document.getElementById('thinking').classList.remove('hidden');
+                showStatus('Pelikan is thinking...', 'info');
+                // document.getElementById('thinking').classList.remove('hidden');
                 
                 const response = await fetch('/make_move', {
                     method: 'POST',
@@ -352,7 +348,7 @@
                 });
 
                 const data = await response.json();
-                document.getElementById('thinking').classList.add('hidden');
+                // document.getElementById('thinking').classList.add('hidden');
 
                 if (data.success) {
                     moveInput.value = '';
@@ -372,7 +368,7 @@
                     showStatus(data.error, 'error');
                 }
             } catch (error) {
-                document.getElementById('thinking').classList.add('hidden');
+                // document.getElementById('thinking').classList.add('hidden');
                 showStatus('Error making move', 'error');
             }
         }
