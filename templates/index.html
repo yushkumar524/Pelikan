@@ -265,10 +265,10 @@
                 <div id="status" class="status info">Your turn</div>
 
                 <div class="game-info">
-                    <div class="info-item">
+                    <!-- <div class="info-item">
                         <span>Turn:</span>
                         <span id="current-turn">White</span>
-                    </div>
+                    </div> -->
                     <div class="info-item">
                         <span>You are:</span>
                         <span id="player-color">White</span>
@@ -356,9 +356,7 @@
 
                 if (data.success) {
                     moveInput.value = '';
-                    updateBoard(data.board_svg);
-                    document.getElementById('current-turn').textContent = data.turn;
-                    
+                    updateBoard(data.board_svg);      
                     if (data.game_over) {
                         showStatus(`Game Over: ${data.result}`, 'success');
                         document.getElementById('move-input').classList.add('hidden');
@@ -401,8 +399,6 @@
                 }
 
                 updateBoard(data.board_svg);
-                document.getElementById('current-turn').textContent = data.turn;
-                
                 if (data.game_over) {
                     showStatus(`Game Over: ${data.result}`, 'success');
                     document.getElementById('move-input').classList.add('hidden');
