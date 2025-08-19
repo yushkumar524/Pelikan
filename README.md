@@ -1,7 +1,7 @@
 # Pelikan 𓅟
 A Python-based chess engine with a Flask-based web interface, featuring SVG board visualization, alpha-beta pruning, and opening book support.
 
-## 🎮 Play Online
+## Play Online
 **Try it now: [https://pelikan-8ep4.onrender.com](https://pelikan-8ep4.onrender.com)**
 
 *Note: The first load may take 30 seconds as the server wakes up.*
