@@ -1,6 +1,11 @@
 # Pelikan 𓅟
 A Python-based chess engine with a Flask-based web interface, featuring SVG board visualization, alpha-beta pruning, and opening book support.
 
+## 🎮 Play Online
+**Try it now: [https://pelikan-8ep4.onrender.com](https://pelikan-8ep4.onrender.com)**
+
+*Note: The first load may take 30 seconds as the server wakes up.*
+
 ## Features
 
 - Flask-based web interface
@@ -11,7 +16,12 @@ A Python-based chess engine with a Flask-based web interface, featuring SVG boar
 
 ## Getting Started
 
-### Requirements
+### Play Online
+Simply visit [https://pelikan-8ep4.onrender.com](https://pelikan-8ep4.onrender.com) to play immediately in your browser!
+
+### Local Development
+
+#### Requirements
 
 - Python 3.8+
 - `python-chess` and `flask`: Install via pip:
@@ -20,14 +30,14 @@ A Python-based chess engine with a Flask-based web interface, featuring SVG boar
   pip install chess flask
   ```
 
-### Clone the Repo
+#### Clone the Repo
 
   ```bash
   git clone https://github.com/yushkumar524/Pelikan.git
   cd Pelikan
   ```
 
-### Run the Web interface
+#### Run Locally
 
 - Start the Flask server:
 
@@ -37,6 +47,6 @@ A Python-based chess engine with a Flask-based web interface, featuring SVG boar
 
 - Open your browser and navigate to `http://localhost:5001` or `http://127.0.0.1:5001`.
 
-### Choose your side and play!
+### How to Play
 
 Use the buttons to choose your color (White or Black). Click "Start Game" and enter moves in algebraic notation (e.g., `d4`, `Nf6`, `0-0`). Pelikan will automatically respond after each move.
